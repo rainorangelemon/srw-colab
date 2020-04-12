@@ -3,12 +3,14 @@ import numpy as np
 
 from keras import backend as K
 from keras.optimizers import RMSprop
+import tensorflow as tf
 
 from lib.utils import ExperienceReplay
 from lib.keras_utils import slice_tensor_tensor, clipped_sum_error
 from dqn_secure.model import build_large_cnn
 
 import logging
+
 logger = logging.getLogger(__name__)
 floatX = 'float32'
 
@@ -72,11 +74,13 @@ class AI(object):
             q2_max = slice_tensor_tensor(q2, a_max)
         else:
             q2_max = K.max(q2, axis=1)
-        
+
         # over-estimation correction
         if len(self.bootstrap_corr) > 0:
-            q2_max -= (q2_max - np.float32(self.bootstrap_corr[1])) * (q2_max > self.bootstrap_corr[1])
-            q2_max -= (q2_max - np.float32(self.bootstrap_corr[0])) * (q2_max < self.bootstrap_corr[0])
+            q2_max -= (q2_max - np.float32(self.bootstrap_corr[1])) * tf.dtypes.cast((q2_max > self.bootstrap_corr[1]),
+                                                                                     tf.float32)
+            q2_max -= (q2_max - np.float32(self.bootstrap_corr[0])) * tf.dtypes.cast((q2_max < self.bootstrap_corr[0]),
+                                                                                     tf.float32)
 
         targets = r + (np.float32(1) - t) * self.gamma * q2_max
 
@@ -114,7 +118,7 @@ class AI(object):
         q = self.get_q(states, target)[0]
         q = q > q_threshold
         return np.where(q == True)[0]  # could be empty
-    
+
     def get_secure_uniform_action(self, s):
         # Uniform and secure (presumption of innocence)
         q = self.get_q(s, target=False)[0].astype(np.float64)

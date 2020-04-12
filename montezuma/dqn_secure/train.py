@@ -8,9 +8,9 @@ import sys
 ROOT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir)
 OUTPUT_DIR = ROOT_DIR
 sys.path.append(ROOT_DIR)
-os.environ['KERAS_BACKEND'] = 'theano'
+os.environ['KERAS_BACKEND'] = 'tensorflow'
 import keras.backend as K
-K.set_image_data_format('channels_last')
+K.set_image_data_format('channels_first')
 
 from lib.utils import Font
 from dqn_secure.experiment import DQNExperiment
