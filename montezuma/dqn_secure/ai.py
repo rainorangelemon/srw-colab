@@ -115,7 +115,7 @@ class AI(object):
             return np.argmax(self.predict_target([states])[0], axis=1)
 
     def get_safe_actions(self, states, target, q_threshold):
-        q = self.get_q(states, target)
+        q = self.get_q(states, target)[0]
         q = q > q_threshold
         return np.where(q == True)[0]  # could be empty
 
