@@ -10,7 +10,7 @@ OUTPUT_DIR = ROOT_DIR
 sys.path.append(ROOT_DIR)
 os.environ['KERAS_BACKEND'] = 'tensorflow'
 import keras.backend as K
-K.set_image_data_format('channels_first')
+K.set_image_data_format('channels_last')
 
 from lib.utils import Font
 from dqn_secure.experiment import DQNExperiment
