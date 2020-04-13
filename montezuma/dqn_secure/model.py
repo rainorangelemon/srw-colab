@@ -12,26 +12,23 @@ def build_large_cnn(state_shape, num_channels, nb_actions):
 
     input_dim = tuple([num_channels] + state_shape)
     states = Input(shape=input_dim, dtype=floatX, name='states')
-    if K.backend() == 'tensorflow':
-        reshaped = Permute((2, 3, 1), input_shape=input_dim)(states)
-    elif K.backend() == 'theano':
-        reshaped = states
-    else:
-        raise ValueError("Only theano and tensorflow are supported")
+    print(K.image_data_format())
     conv1 = Convolution2D(nb_filter=16,
                       nb_row=8,
                       nb_col=8,
                       border_mode='same',
                       subsample=(4, 4),
                       activation='relu',
-                      init='he_uniform')(reshaped)
+                      init='he_uniform',
+                      data_format=K.image_data_format())(states)
     conv2 = Convolution2D(nb_filter=32,
                       nb_row=4,
                       nb_col=4,
                       border_mode='same',
                       subsample=(2, 2),
                       activation='relu',
-                      init='he_uniform')(conv1)
+                      init='he_uniform',
+                      data_format=K.image_data_format())(conv1)
     flatten = Flatten()(conv2)
     dense1 = Dense(output_dim=256,
                init='he_uniform',
