@@ -1,5 +1,5 @@
 from keras.layers import Input
-from keras.layers.core import Dense, Flatten, Reshape
+from keras.layers.core import Dense, Flatten, Permute
 from keras.layers.convolutional import Convolution2D
 from keras.models import Model
 from keras import backend as K
@@ -13,7 +13,7 @@ def build_large_cnn(state_shape, num_channels, nb_actions):
     input_dim = tuple([num_channels] + state_shape)
     states = Input(shape=input_dim, dtype=floatX, name='states')
     if K.backend() == 'tensorflow':
-        reshaped = Reshape(tuple(state_shape + [num_channels]), input_shape=input_dim)(states)
+        reshaped = Permute((2, 3, 1), input_shape=input_dim)(states)
     elif K.backend() == 'theano':
         reshaped = states
     else:

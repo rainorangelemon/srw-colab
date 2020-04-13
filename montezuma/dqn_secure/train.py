@@ -89,7 +89,8 @@ def run(options, save):
                 learning_frequency=params['learning_frequency'], ddqn=params['ddqn'],
                 network_size=params['exploit_network_size'], normalize=params['normalize'],
                 replay_buffer=replay_buffer_exploit, bootstrap_corr=btstrap_corr, rng=random_state)
-        if params['secure'] == True:
+
+        if params['secure']:
             # AI for explore (by definition): gamma=1.0 ; method=DDQN ; reward -1 for bad term, zero otherwise
             replay_buffer_explore = ExperienceReplay(max_size=params['replay_max_size'],
                                                      history_len=params['history_len'],
